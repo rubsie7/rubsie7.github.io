@@ -1,1 +1,32 @@
-<h> Projects </h>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Ruby Isley</title>
+		<!-- link to main stylesheet -->
+		<link rel="stylesheet" type="text/css" href="/css/main.css">
+	</head>
+	<body>
+		<nav>
+    		<ul>
+        		<li><a href="/">Home</a></li>
+	        	<li><a href="/aboutme">About Me</a></li>
+        		<li><a href="/mywork">My Work</a></li>
+            <li><a href="/getintouch">Relevant Projects</a></li>
+        		<li><a href="/getintouch">Get in Touch</a></li>
+    		</ul>
+		</nav>
+		<div class="container">
+    		<div class="blurb">
+        		<h1>Relevant Projects</h1>
+			      	<p>These are some projects done throughout my undergraduate years which reflect some of my skills.</a></p>
+				<p>The rights to these assignments belong to the Syracuse University School of Information Studies unless stated otherwise. Many of these projects rely on real datasets, but are intended to be seen as purely for educational purposes.</a></p>
+		</div><!-- /.blurb -->
+		</div><!-- /.container -->
+		<footer>
+    			<ul>
+        		<li>The source code for this website is at: <a href="https://github.com/rubsie7/rubsie7.github.io">github.com/rubsie7/rubsie7.github.io</a></li>
+			</ul>
+		</footer>
+	</body>
+</html>
+
