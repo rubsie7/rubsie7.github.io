@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ruby Isley</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #fdf6f0;
+      --surface: #fff8f3;
+      --accent: #c96a3a;
+      --accent-soft: #f5dece;
+      --text: #2d2119;
+      --muted: #7a5c4a;
+      --border: #e8d5c4;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 2rem 0;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: normal;
+      letter-spacing: 0.02em;
+      color: var(--accent);
+    }
+
+    header p.tagline {
+      margin-top: 0.4rem;
+      color: var(--muted);
+      font-size: 1rem;
+      font-style: italic;
+    }
+
+    /* ── Tabs ── */
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 0.25rem;
+      margin-top: 1.8rem;
+      flex-wrap: wrap;
+    }
+
+    nav button {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      padding: 0.6rem 1.4rem;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    nav button:hover { color: var(--accent); }
+
+    nav button.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      font-weight: bold;
+    }
+
+    /* ── Content ── */
+    main {
+      max-width: 780px;
+      margin: 3rem auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    .tab-panel { display: none; animation: fadeIn 0.25s ease; }
+    .tab-panel.active { display: block; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: normal;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+    }
+
+    p { line-height: 1.75; color: var(--text); margin-bottom: 1rem; }
+
+    /* ── About ── */
+    .about-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+
+    .avatar {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    @media (max-width: 520px) {
+      .about-card { flex-direction: column; }
+      .avatar { width: 80px; height: 80px; font-size: 2rem; }
+    }
+
+    /* ── Timeline ── */
+    .timeline { list-style: none; position: relative; padding-left: 1.6rem; }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.3rem;
+      top: 0.5rem;
+      bottom: 0.5rem;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline li {
+      position: relative;
+      margin-bottom: 2rem;
+      padding-left: 1.2rem;
+    }
+
+    .timeline li::before {
+      content: '';
+      position: absolute;
+      left: -1.35rem;
+      top: 0.5rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+    }
+
+    .timeline .role {
+      font-weight: bold;
+      font-size: 1.05rem;
+    }
+
+    .timeline .org {
+      color: var(--accent);
+      font-size: 0.95rem;
+    }
+
+    .timeline .period {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 0.3rem;
+    }
+
+    /* ── Values ── */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .value-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+    }
+
+    .value-card .icon { font-size: 1.8rem; margin-bottom: 0.6rem; }
+    .value-card h3 { font-size: 1rem; margin-bottom: 0.4rem; color: var(--accent); }
+    .value-card p { font-size: 0.92rem; margin: 0; color: var(--muted); }
+
+    /* ── Contact ── */
+    .contact-list { list-style: none; }
+
+    .contact-list li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 0.8rem;
+    }
+
+    .contact-list .icon { font-size: 1.4rem; width: 2rem; text-align: center; }
+
+    .contact-list a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.97rem;
+    }
+
+    .contact-list a:hover { text-decoration: underline; }
+
+    .contact-list .label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: block;
+    }
+
+    form {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.8rem;
+      margin-top: 2rem;
+    }
+
+    form label { display: block; font-size: 0.9rem; color: var(--muted); margin-bottom: 0.3rem; }
+
+    form input, form textarea {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 1.1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    form input:focus, form textarea:focus { border-color: var(--accent); }
+    form textarea { min-height: 120px; resize: vertical; }
+
+    form button[type="submit"] {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.7rem 2rem;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    form button[type="submit"]:hover { opacity: 0.88; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Ruby Isley</h1>
+  <nav id="tabs">
+    <button class="active" data-tab="about">About Me</button>
+    <button data-tab="done">What I've Done</button>
+    <button data-tab="care">What I Care About</button>
+    <button data-tab="contact">Get In Contact</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- About Me -->
+  <section id="about" class="tab-panel active">
+    <h2>About Me</h2>
+    <div class="about-card">
+      <div class="avatar"><img src="photo.jpeg" alt="Ruby Isley" /></div>
+      <div>
+        <p>Hi, I'm Ruby — a Technical Program Manager living in San Francisco, working on scaling capacity infrastructure and enabling AI quickly, efficiently, and ethically.</p>
+        <p>I started my career at the intersection of AI, information systems, public policy, and ethics, which gave me a unique lens on the complex challenge of responsible technology. I care about striking a balance between innovation and privacy, security, and integrity.</p>
+        <p>When I'm not thinking about capacity planning, I'm practicing yoga, reading (sci-fi or memoirs), going to the movies, and playing with my two cats, Pumpkin and Lima Bean.</p>
+        <img src="cats.jpg" alt="Pumpkin and Lima Bean" style="width: 100%; max-width: 260px; border-radius: 12px; margin-top: 1rem; display: block;" />
+        <p style="margin-top: 1rem;">I believe in empathy in technology and everyday life. I believe that movies are always better when watched at a movie theatre, and that plant-based milk should cost less than dairy milk.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- What I've Done -->
+  <section id="done" class="tab-panel">
+    <h2>What I've Done</h2>
+    <p>Here's a snapshot — <a href="resume.pdf" download style="color: var(--accent);">download my full resume</a> for more detail.</p>
+    <ul class="timeline" style="margin-top: 1.2rem;">
+      <li>
+        <div class="role">Technical Program Manager</div>
+        <div class="org">Meta</div>
+        <div class="period">June 2024 – May 2026</div>
+        <p>Owned end-to-end compute capacity management for Meta's Risk org (~$118M), scaled AI infrastructure 25x from 72 to 1,800 inference GPUs, and drove $58M in infrastructure savings — exceeding efficiency targets by 490%.</p>
+      </li>
+      <li>
+        <div class="role">Strategy Consultant / Technical Program Manager</div>
+        <div class="org">Deloitte Consulting (embedded at Meta)</div>
+        <div class="period">September 2021 – June 2024</div>
+        <p>Embedded at Meta in a staff augmentation role. Managed 8 data center infrastructure projects enabling 387.5 MW of capacity delivery, then led Privacy compute capacity TPM — reclaiming 3.6 MW of unused capacity (~$34.1M) and closing 92.8% of quota violations across ~50 teams.</p>
+      </li>
+      <li>
+        <div class="role">Public Sector Consulting Intern</div>
+        <div class="org">Syracuse University Geography Department</div>
+        <div class="period">July 2020 – September 2020</div>
+        <p>Researched Smart City applications — AI, ML, GIS, and predictive analytics — in COVID-19 response to support Syracuse's designation as a New York State flagship smart city.</p>
+      </li>
+      <li>
+        <div class="role">Information Technology Intern</div>
+        <div class="org">Xylem Inc.</div>
+        <div class="period">May 2019 – February 2020</div>
+        <p>Led company-wide rollout of a new internal communications platform across a global workforce of 17,000+, deployed technologies at corporate HQ, and trained senior leadership on tools supporting hybrid work.</p>
+      </li>
+      <li>
+        <div class="role">Machine Learning Research Assistant</div>
+        <div class="org">Syracuse University School of Information Studies</div>
+        <div class="period">November 2019 – February 2020</div>
+        <p>Supported Professor Lu Xiao's research on propaganda detection in news media by validating the accuracy of bias-identification machine learning algorithms.</p>
+      </li>
+      <li>
+        <div class="role">B.S. Information Management and Technology</div>
+        <div class="org">Syracuse University — Magna Cum Laude</div>
+        <div class="period">August 2017 – May 2021</div>
+        <p>Renée Crown University Honors College member and Phanstiel Scholar. Published research on algorithmic bias and AI governance in the N.Y.U. American Public Policy Review (2022).</p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- What I Care About -->
+  <section id="care" class="tab-panel">
+    <h2>What I Care About</h2>
+    <p>Technology shapes the world — and I think the people building it have a responsibility to do so thoughtfully. Here's what guides me.</p>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="icon">🤖</div>
+        <h3>Ethical AI</h3>
+        <p>AI is only as good as the values baked into it. <a href="https://nyuappr.pubpub.org/pub/61cuny79/release/2" target="_blank" rel="noopener" style="color: var(--accent);">I published research on algorithmic bias and AI governance</a>, and I bring that lens to every infrastructure and program decision I make.</p>
+      </div>
+      <div class="value-card">
+        <div class="icon">🔒</div>
+        <h3>Privacy</h3>
+        <p>People's data deserves to be treated with care. I've spent years managing privacy compute infrastructure and believe strong privacy practices are a feature, not a constraint.</p>
+      </div>
+      <div class="value-card">
+        <div class="icon">📚</div>
+        <h3>Reading</h3>
+        <p>If I'm reading something really good I will abandon everything until the book is done. I usually fall into phases where I read a lot of one genre at once. Right now I'm interested in non-fiction about old Hollywood. Before that I was on a memoir kick. Here is my <a href="https://www.goodreads.com/user/show/20825810-ruby-isley" target="_blank" rel="noopener" style="color: var(--accent);">Goodreads</a> profile, where I track my books, and try (and fail) to beat my annual book challenge.</p>
+      </div>
+      <div class="value-card">
+        <div class="icon">🎬</div>
+        <h3>Going to the Movies</h3>
+        <p>I'm a proponent of supporting local movie theatres (there are so many good ones in SF). The movies is one of the best third spaces we have! Check out my <a href="https://letterboxd.com/rubsie7/" target="_blank" rel="noopener" style="color: var(--accent);">Letterboxd</a> to see what I'm watching.</p>
+      </div>
+      <div class="value-card">
+        <div class="icon">🍜</div>
+        <h3>Trying New Food</h3>
+        <p>Hot take: the food scene is better in the Bay Area than in New York (I used to live in Manhattan and before that Connecticut). Of course New York has more of everything, but SF has a crazy food scene relative to its size — not to mention the rest of the Bay Area! I love trying new dishes and finding new places to eat. It's hard but I rank everywhere I go on Beli (@rubyisley). Can you tell I love making lists? I'm a sucker for an app that combines something I love with an opportunity to make a list.</p>
+      </div>
+      <div class="value-card">
+        <div class="icon">⚡</div>
+        <h3>Efficiency with Intention</h3>
+        <p>Driving $58M in infrastructure savings wasn't just about cost — it was about freeing up resources to do more meaningful work. I care about doing things well and doing them right.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Get In Contact -->
+  <section id="contact" class="tab-panel">
+    <h2>Get In Contact</h2>
+    <p>I'd love to hear from you — whether it's a collaboration, a question, or just a hello.</p>
+    <ul class="contact-list">
+      <li>
+        <span class="icon">✉️</span>
+        <div>
+          <span class="label">Email</span>
+          <a href="mailto:rubyisley7@gmail.com">rubyisley7@gmail.com</a>
+        </div>
+      </li>
+      <li>
+        <span class="icon">💼</span>
+        <div>
+          <span class="label">LinkedIn</span>
+          <a href="https://linkedin.com/in/rubyisley" target="_blank" rel="noopener">linkedin.com/in/rubyisley</a>
+        </div>
+      </li>
+      <li>
+        <span class="icon">🐙</span>
+        <div>
+          <span class="label">GitHub</span>
+          <a href="https://github.com/rubsie7" target="_blank" rel="noopener">github.com/rubsie7</a>
+        </div>
+      </li>
+    </ul>
+
+    <form onsubmit="handleSubmit(event)">
+      <label for="name">Your name</label>
+      <input type="text" id="name" placeholder="Jane Smith" required />
+
+      <label for="email">Your email</label>
+      <input type="email" id="email" placeholder="jane@example.com" required />
+
+      <label for="message">Message</label>
+      <textarea id="message" placeholder="What's on your mind?" required></textarea>
+
+      <button type="submit">Send message</button>
+    </form>
+  </section>
+
+</main>
+
+<script>
+  // Tab switching
+  const tabs = document.querySelectorAll('nav button');
+  const panels = document.querySelectorAll('.tab-panel');
+
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Contact form (mailto fallback — swap for a real backend/Formspree as needed)
+  function handleSubmit(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+    const subject = encodeURIComponent(`Message from ${name}`);
+    const body = encodeURIComponent(`From: ${name} <${email}>\n\n${message}`);
+    window.location.href = `mailto:rubyisley7@gmail.com?subject=${subject}&body=${body}`;
+  }
+</script>
+
+</body>
+</html>
